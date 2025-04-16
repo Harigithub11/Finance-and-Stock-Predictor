@@ -6,6 +6,7 @@ from sklearn.metrics import mean_squared_error
 import xgboost as xgb
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
+import matplotlib.pyplot as plt
 
 def run_stock_prediction(csv_path):
     print("\n📈 Running Stock Prediction using XGBoost + LSTM...\n")
@@ -109,3 +110,16 @@ def run_stock_prediction(csv_path):
 
     print(f"\n📊 MSE (XGBoost): {mean_squared_error(y_test_xgb[-min_len:], xgb_preds[-min_len:]):.4f}")
     print(f"📊 MSE (LSTM): {mean_squared_error(scaler.inverse_transform(y_test_lstm[:min_len].reshape(-1, 1)), lstm_preds.reshape(-1, 1)):.4f}")
+
+    plt.figure(figsize=(12, 6))
+    plt.plot(test_dates, y_test_xgb[-min_len:], label="Actual", color='blue')
+    plt.plot(test_dates, combined_preds, label="Predicted (Combined)", color='orange')
+    plt.xlabel("Date")
+    plt.ylabel("Close Price")
+    plt.title("📈 Actual vs Predicted Close Price (XGBoost + LSTM)")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
+ 
